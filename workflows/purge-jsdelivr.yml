@@ -1,0 +1,19 @@
+name: Purge jsDelivr cache after PDF update
+
+on:
+  push:
+    branches: [ main ]          # cambia se il ramo di lavoro è diverso
+    paths:                      # parte solo se cambiano questi file
+      - 'vini.pdf'
+      - 'menu.pdf'
+      - 'bar.pdf'
+
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Purge jsDelivr cache
+        run: |
+          curl -sSf https://purge.jsdelivr.net/gh/alexsapo17/chalet-assets/vini.pdf
+          curl -sSf https://purge.jsdelivr.net/gh/alexsapo17/chalet-assets/menu.pdf
+          curl -sSf https://purge.jsdelivr.net/gh/alexsapo17/chalet-assets/bar.pdf
