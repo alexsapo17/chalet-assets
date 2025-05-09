@@ -2,18 +2,27 @@ name: Purge jsDelivr cache after PDF update
 
 on:
   push:
-    branches: [ main ]        # cambia se il ramo è diverso
-    paths:
-      - 'vini.pdf'
+    branches: [ main ]          # se il tuo ramo principale ha un altro nome, cambia qui
+    paths:                      # il job parte solo se cambia uno di questi PDF
       - 'menu.pdf'
+      - 'vini.pdf'
       - 'bar.pdf'
+
+  # opzionale: pulsante “Run workflow” nella tab Actions
+  workflow_dispatch:
 
 jobs:
   purge:
     runs-on: ubuntu-latest
     steps:
-      - name: Purge jsDelivr cache
+      - name: Purge jsDelivr cache (alias corto + @main)
         run: |
-          curl -sSf https://purge.jsdelivr.net/gh/alexsapo17/chalet-assets/vini.pdf
-          curl -sSf https://purge.jsdelivr.net/gh/alexsapo17/chalet-assets/menu.pdf
-          curl -sSf https://purge.jsdelivr.net/gh/alexsapo17/chalet-assets/bar.pdf
+          # elenco dei file PDF da invalidare
+          FILES=("menu" "vini" "bar")
+          
+          for f in "${FILES[@]}"; do
+            # alias “corto”  (HEAD)
+            curl -sSf "https://purge.jsdelivr.net/gh/alexsapo17/chalet-assets/${f}.pdf"
+            # alias con @main
+            curl -sSf "https://purge.jsdelivr.net/gh/alexsapo17/chalet-assets@main/${f}.pdf"
+          done
